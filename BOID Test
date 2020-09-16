@@ -15,7 +15,7 @@ void draw() {
   background(50);
   flock.run();
   textSize(32);
-text(xy.getInt(0, 1), 10, 30);
+text(getPeople(), 10, 30);
   
 int d = day();    // Values from 1 - 31
 int m = month();  // Values from 1 - 12
@@ -263,4 +263,14 @@ class Boid {
       return new PVector(0, 0);
     }
   }
+}
+
+int getPeople() {
+  int people = 0;
+  for (int r = 0; r < xy.getRowCount(); r++) {
+    for (int c = 0; c < xy.getColumnCount(); c++) {
+      people += xy.getInt(r, c);
+    }
+  }
+  return people;
 }
