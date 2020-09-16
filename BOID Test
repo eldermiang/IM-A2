@@ -3,10 +3,10 @@ Table xy;
 int index = 1;
 void setup() {
   size(1024, 720);
- xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-05-15T19%3A06%3A09&rToDate=2020-07-17T19%3A06%3A09&rFamily=wasp&rSensor=ES_B_06_418_7BED&rSubSensor=HUMA", "csv");
+ xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2019-09-14T13%3A23%3A28&rToDate=2020-09-16T13%3A23%3A28&rFamily=people&rSensor=+PC00.05+%28In%29", "csv");
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < xy.getRowCount()/100; i++) {
+  for (int i = 0; i < xy.getInt(0, 1); i++) {
     flock.addBoid(new Boid(width/2,height/2));
   }
 }
@@ -15,8 +15,18 @@ void draw() {
   background(50);
   flock.run();
   textSize(32);
-text(xy.getRowCount(), 10, 30);
+text(xy.getInt(0, 1), 10, 30);
+  
+int d = day();    // Values from 1 - 31
+int m = month();  // Values from 1 - 12
+int y = year();   // 2003, 2004, 2005, etc.
 
+String s = String.valueOf(d);
+text(s, 200, 28);
+s = String.valueOf(m);
+text(s, 200, 56); 
+s = String.valueOf(y);
+text(s, 200, 84);
 }
 
 // Add a new boid into the System
@@ -143,6 +153,9 @@ class Boid {
     pushMatrix();
     translate(position.x, position.y);
     rotate(theta);
+   
+   
+   
     beginShape(TRIANGLES);
     vertex(0, -r*2);
     vertex(-r, r*2);
