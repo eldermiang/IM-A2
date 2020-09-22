@@ -47,28 +47,33 @@ void draw() {
   else {
     fill(currentColor);
   }
+  
   rect(rectX, rectY, rectLength, rectHeight);
   rect(rectX2, rectY2, rectLength, rectHeight);
   
   fill(255);
-  text("Floor 0", rectX - 50, rectY + 10);
-  text("Floor 1", rectX2 - 50, rectY2 + 10);
-  //text("Floor 1");
+  textAlign(CENTER, CENTER);
+  text("Floor 0", rectX, rectY);
+  text("Floor 1", rectX2, rectY2);
   
   flock.run();
+  textAlign(BASELINE);
   textSize(32);
   text(getPeople(), 10, 30);
   
-  int d = day();    // Values from 1 - 31
-  int m = month();  // Values from 1 - 12
-  int y = year();   // 2003, 2004, 2005, etc.
+  //int d = day();    // Values from 1 - 31
+  //int m = month();  // Values from 1 - 12
+  //int y = year();   // 2003, 2004, 2005, etc.
 
-  String s = String.valueOf(d);
-  text(s, 200, 28);
-  s = String.valueOf(m);
-  text(s, 200, 56); 
-  s = String.valueOf(y);
-  text(s, 200, 84);
+  //String s = String.valueOf(d);
+  //text(s, 200, 28);
+  //s = String.valueOf(m);
+  //text(s, 200, 56); 
+  //s = String.valueOf(y);
+  //text(s, 200, 84);
+  
+  text(getDate("start"), 200, 28);
+  text(getDate("end"), 200, 56);
 }
 
 void update(int x, int y) {
@@ -91,6 +96,15 @@ void mousePressed() {
   }
 }
 
+boolean overFloor (int x, int y, int width, int height) {
+  if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 int getPeople() {
   int people = 0;
   for (int r = 0; r < xy.getRowCount(); r++) {
@@ -101,11 +115,19 @@ int getPeople() {
   return people;
 }
 
-boolean overFloor (int x, int y, int width, int height) {
-  if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
-    return true;
+String getDate(String period) {
+  String start = "start";
+  String end = "end";
+  String date;
+  
+  if (period.toLowerCase() == start.toLowerCase()){
+    date = xy.getString(0, 0);
+  }
+  else if (period.toLowerCase() == end.toLowerCase()){
+    date = xy.getString(xy.getRowCount() - 1, 0);
   }
   else {
-    return false;
+    date = "Unknown";
   }
+  return date;
 }
