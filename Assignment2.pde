@@ -131,6 +131,8 @@ void draw() {
     text(getDate("END", xy4), 200, 56);
   }
   
+  text("Floor: " + floor + " Month: " + month, 600, 28);
+  
   //int d = day();    // Values from 1 - 31
   //int m = month();  // Values from 1 - 12
   //int y = year();   // 2003, 2004, 2005, etc.
