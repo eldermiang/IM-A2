@@ -72,8 +72,8 @@ void draw() {
   //s = String.valueOf(y);
   //text(s, 200, 84);
   
-  text(getDate("start"), 200, 28);
-  text(getDate("end"), 200, 56);
+  text(getDate("START"), 200, 28);
+  text(getDate("END"), 200, 56);
 }
 
 void update(int x, int y) {
@@ -120,10 +120,10 @@ String getDate(String period) {
   String end = "end";
   String date;
   
-  if (period.toLowerCase() == start.toLowerCase()){
+  if (period.toLowerCase().equals(start.toLowerCase())){
     date = xy.getString(0, 0);
   }
-  else if (period.toLowerCase() == end.toLowerCase()){
+  else if (period.toLowerCase().equals(end.toLowerCase())){
     date = xy.getString(xy.getRowCount() - 1, 0);
   }
   else {
