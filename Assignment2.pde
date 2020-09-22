@@ -116,14 +116,12 @@ int getPeople() {
 }
 
 String getDate(String period) {
-  String start = "start";
-  String end = "end";
   String date;
   
-  if (period.toLowerCase().equals(start.toLowerCase())){
+  if (period.toLowerCase().equals("start")){
     date = xy.getString(0, 0);
   }
-  else if (period.toLowerCase().equals(end.toLowerCase())){
+  else if (period.toLowerCase().equals("end")){
     date = xy.getString(xy.getRowCount() - 1, 0);
   }
   else {
