@@ -1,5 +1,5 @@
 Flock flock;
-Table xy;
+Table xy, xy2;
 int index = 1;
 int floor = 1;
 int rectX, rectY, rectLength, rectHeight;
@@ -12,12 +12,19 @@ color rectHighlight;
 void setup() {
   size(1024, 720);
   xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T15:16:30.254&rToDate=2020-09-22T15:16:30.254&rFamily=people&rSensor=+PC00.05+%28In%29", "csv");
+  xy2 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T18:59:33.300&rToDate=2020-09-22T18:59:33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv");
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < xy.getInt(0, 1); i++) {
-    flock.addBoid(new Boid(width/2,height/2));
+  if (floor == 1){
+    for (int i = 0; i < xy.getInt(0, 1); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
   }
-  
+  else if (floor == 0) {
+    for (int i = 0; i < xy2.getInt(0, 1); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
   rectMode(CENTER);
   rectX = 100;
   rectY = height - 100;
@@ -49,6 +56,14 @@ void draw() {
   }
   
   rect(rectX, rectY, rectLength, rectHeight);
+  
+  if (overFloor1) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
   rect(rectX2, rectY2, rectLength, rectHeight);
   
   fill(255);
@@ -59,7 +74,16 @@ void draw() {
   flock.run();
   textAlign(BASELINE);
   textSize(32);
-  text(getPeople(), 10, 30);
+  if (floor == 1){
+    text(getPeople(xy), 10, 30);
+    text(getDate("START", xy), 200, 28);
+    text(getDate("END", xy), 200, 56);
+  }
+  else if (floor == 0){
+    text(getPeople(xy2), 10, 30);
+    text(getDate("START", xy2), 200, 28);
+    text(getDate("END", xy2), 200, 56);
+  }
   
   //int d = day();    // Values from 1 - 31
   //int m = month();  // Values from 1 - 12
@@ -72,17 +96,22 @@ void draw() {
   //s = String.valueOf(y);
   //text(s, 200, 84);
   
-  text(getDate("START"), 200, 28);
-  text(getDate("END"), 200, 56);
+  //text(mouseX, 200, 84);
+  //text(mouseY, 200, 112);
 }
 
 void update(int x, int y) {
   if (overFloor(rectX, rectY, rectLength, rectHeight)){
     overFloor0 = true;
+    overFloor1 = false;
   }
-  else 
+  else if(overFloor(rectX2, rectY2, rectLength, rectHeight))
   {
     overFloor0 = false;
+    overFloor1 = true;
+  }
+  else {
+    overFloor0 = overFloor1 = false;
   }
 }
 
@@ -90,14 +119,16 @@ void mousePressed() {
   //flock.addBoid(new Boid(mouseX, mouseY));
   if (overFloor0) {
     floor = 0;
+    frameCount = -1; // Resets the sketch
   }
   else if (overFloor1) {
     floor = 1;
+    frameCount = -1; // Resets the sketch
   }
 }
 
 boolean overFloor (int x, int y, int width, int height) {
-  if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+  if (mouseX >= (x - width/2) && mouseX <= (x + width/2) && mouseY >= (y - height / 2) && mouseY <= (y + height/2)) {
     return true;
   }
   else {
@@ -105,24 +136,24 @@ boolean overFloor (int x, int y, int width, int height) {
   }
 }
 
-int getPeople() {
+int getPeople(Table table) {
   int people = 0;
-  for (int r = 0; r < xy.getRowCount(); r++) {
-    for (int c = 0; c < xy.getColumnCount(); c++) {
-      people += xy.getInt(r, c);
+  for (int r = 0; r < table.getRowCount(); r++) {
+    for (int c = 0; c < table.getColumnCount(); c++) {
+      people += table.getInt(r, c);
     }
   }
   return people;
 }
 
-String getDate(String period) {
+String getDate(String period, Table table) {
   String date;
   
   if (period.toLowerCase().equals("start")){
-    date = xy.getString(0, 0);
+    date = table.getString(0, 0);
   }
   else if (period.toLowerCase().equals("end")){
-    date = xy.getString(xy.getRowCount() - 1, 0);
+    date = table.getString(table.getRowCount() - 1, 0);
   }
   else {
     date = "Unknown";
