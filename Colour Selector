@@ -1,7 +1,7 @@
 Flock flock;
 Table xy;
 int index = 1;
-
+<b>
 //Buttons
 int rectX, rectY;      // Position of square button
 int circleX, circleY;  // Position of circle button
@@ -13,7 +13,7 @@ color currentColor;
 boolean rectOver = false;
 boolean circleOver = false;
 
-
+</b>
 
 void setup() {
   size(1024, 720);
