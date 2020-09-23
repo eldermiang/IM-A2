@@ -9,7 +9,7 @@ boolean overFloor0, overFloor1;
 boolean september, august;
 color currentColor;
 color rectHighlight;
-
+PImage bg;
 
 void setup() {
   size(1024, 720);
@@ -51,13 +51,15 @@ void setup() {
   
   rectHighlight = color(50);
   currentColor = color(0);
+  bg = loadImage("Images/Dirt_Background.jpg");
 }
 
 void draw() {
   update(mouseX, mouseY);
   
   if (floor == 0) {
-    background(50);
+    //background(50);
+    background(bg);
   }
   else if (floor == 1) {
     background(0);

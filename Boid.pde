@@ -202,9 +202,12 @@ class Boid {
   }
   
   void generateAnt(){
+    fill(0);
+    stroke(255);
     ellipse(0, 0, 15, 20); //Lower Body
     ellipse(-0, -10, 10, 20); //Upper Body
     ellipse(0, -20, 10, 15); //Head
+    stroke(255);
     line(5, -25, 10, -30);  //Antenna Right
     line(-5, -25, -10, -30); //Antenna Left
     line(5, -15, 20, -20); //Upper Leg Right
@@ -213,5 +216,7 @@ class Boid {
     line(-5, -5, -20, -5); //Middle Leg Left
     line(8, 5, 20, 10); //Lower Leg Right
     line(-8, 5, -20, 10); //Lower Leg Left
+    stroke(255);
+    fill(50);
   }
 }
