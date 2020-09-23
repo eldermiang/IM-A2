@@ -89,13 +89,15 @@ class Boid {
     translate(position.x, position.y);
     rotate(theta);
    
+    //Test Ant Shape
+    generateAnt();
    
-   
-    beginShape(TRIANGLES);
-    vertex(0, -r*2);
-    vertex(-r, r*2);
-    vertex(r, r*2);
-    endShape();
+    //beginShape(TRIANGLES);
+    //vertex(0, -r*2);
+    //vertex(-r, r*2);
+    //vertex(r, r*2);
+    //endShape();
+    
     popMatrix();
   }
 
@@ -197,5 +199,19 @@ class Boid {
     else {
       return new PVector(0, 0);
     }
+  }
+  
+  void generateAnt(){
+    ellipse(0, 0, 15, 20); //Lower Body
+    ellipse(-0, -10, 10, 20); //Upper Body
+    ellipse(0, -20, 10, 15); //Head
+    line(5, -25, 10, -30);  //Antenna Right
+    line(-5, -25, -10, -30); //Antenna Left
+    line(5, -15, 20, -20); //Upper Leg Right
+    line(-5, -15, -20, -20); //Upper Leg Left
+    line(5, -5, 20, -5); //Middle Leg Right
+    line(-5, -5, -20, -5); //Middle Leg Left
+    line(8, 5, 20, 10); //Lower Leg Right
+    line(-8, 5, -20, 10); //Lower Leg Left
   }
 }
