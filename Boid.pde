@@ -95,9 +95,9 @@ class Boid {
     else if (floor == 1) {
       generateFish();
     }
-    //else if (floor == 2) {
-    
-    //}
+    else if (floor == 2) {
+      generateBird();
+    }
     //else if (floor == 3) {
     
     //}
@@ -248,5 +248,35 @@ class Boid {
     
     stroke(255);
     fill(50);
+  }
+  
+  void generateBird() {
+    r = 0.4;
+    fill(100);
+    noStroke();
+    beginShape();
+    
+    vertex(50*r, 10*r);
+    
+    vertex(45*r, 20*r);
+    vertex(20*r, 15*r);
+    vertex(10*r, 20*r);
+    vertex(35*r, 35*r);
+    vertex(45*r, 30*r);
+    vertex(40*r, 45*r);
+    
+    vertex(50*r, 50*r);
+    
+    vertex(60*r, 45*r);
+    vertex(55*r, 30*r);
+    vertex(65*r, 35*r);
+    vertex(90*r, 20*r);
+    vertex(80*r, 15*r);
+    vertex(55*r, 20*r);
+  
+    endShape(CLOSE);
+    stroke(255);
+    fill(50);
+    r = 2.0;
   }
 }
