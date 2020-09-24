@@ -89,14 +89,24 @@ class Boid {
     translate(position.x, position.y);
     rotate(theta);
    
-    //Test Ant Shape
-    //generateAnt();
+    if (floor == 0) {
+      generateAnt();
+    }
+    else if (floor == 1) {
+      generateFish();
+    }
+    //else if (floor == 2) {
+    
+    //}
+    //else if (floor == 3) {
+    
+    //}
    
-    beginShape(TRIANGLES);
-    vertex(0, -r*2);
-    vertex(-r, r*2);
-    vertex(r, r*2);
-    endShape();
+    //beginShape(TRIANGLES);
+    //vertex(0, -r*2);
+    //vertex(-r, r*2);
+    //vertex(r, r*2);
+    //endShape();
     
     popMatrix();
   }
@@ -201,13 +211,32 @@ class Boid {
     }
   }
   
+  void generateFish(){
+  fill(150);
+  stroke(0);
+   triangle(0, -r*2, -r, r*2, r, r*2); //Tail Fin
+   
+   stroke(0);
+   ellipse (0, -10, 10, 20);//Body
+   ellipse (0, -10, 1, 8);//Dorsal Fin
+   stroke(0);
+   
+   fill(0);
+   ellipse (5, -15, 3, 3);//Eyes
+   ellipse (-5, -15, 3, 3);
+   stroke(255);
+  }
+  
   void generateAnt(){
     fill(0);
-    stroke(255);
+    stroke(210, 105, 30);
+    
     ellipse(0, 0, 15, 20); //Lower Body
     ellipse(-0, -10, 10, 20); //Upper Body
     ellipse(0, -20, 10, 15); //Head
-    stroke(255);
+    
+    stroke(210, 105, 30);
+    
     line(5, -25, 10, -30);  //Antenna Right
     line(-5, -25, -10, -30); //Antenna Left
     line(5, -15, 20, -20); //Upper Leg Right
@@ -216,6 +245,7 @@ class Boid {
     line(-5, -5, -20, -5); //Middle Leg Left
     line(8, 5, 20, 10); //Lower Leg Right
     line(-8, 5, -20, 10); //Lower Leg Left
+    
     stroke(255);
     fill(50);
   }

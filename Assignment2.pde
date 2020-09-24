@@ -1,3 +1,6 @@
+import beads.*;
+import org.jaudiolibs.beads.*;
+
 Flock flock;
 Table xy, xy2, xy3, xy4;
 int index = 1;
@@ -9,15 +12,17 @@ boolean overFloor0, overFloor1;
 boolean september, august;
 color currentColor;
 color rectHighlight;
-PImage bg;
+PImage groundBG, fishBG;
+AudioContext ac;
 
 void setup() {
   size(1024, 720);
   xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T15:16:30.254&rToDate=2020-09-22T15:16:30.254&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, September
   xy2 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T18:59:33.300&rToDate=2020-09-22T18:59:33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, September
-  
   xy3 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, August
   xy4 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, August
+  
+  ac = new AudioContext();
   
   flock = new Flock();
   // Add an initial set of boids into the system
@@ -33,19 +38,29 @@ void setup() {
   
   rectHighlight = color(50);
   currentColor = color(0);
-  bg = loadImage("Images/Dirt_Background.jpg");
+  groundBG = loadImage("Images/Dirt_Background.jpg");
+  fishBG = loadImage("Images/Fish_Background.png");
+  
+  if (floor == 1) {
+    fishBGM();
+  }
 }
 
 void draw() {
   update(mouseX, mouseY);
   
   if (floor == 0) {
-    //background(50);
-    background(bg);
+    background(groundBG);
   }
   else if (floor == 1) {
-    background(0);
+    background(fishBG);
   }
+  //else if (floor == 2) {
+  //  background();
+  //}
+  //else if (floor == 3) {
+  //  background;
+  //}
   
   
   flock.run();
@@ -238,4 +253,15 @@ void addBoids(){
       flock.addBoid(new Boid(width/2,height/2));
     }
   }
+}
+
+void fishBGM() {
+  String audioFileName = "Sounds/BGM/Level Music.mp3";
+  SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+  
+  Envelope rate = new Envelope(ac, 1);
+  player.setRate(rate);
+  
+  ac.out.addInput(player);
+  ac.start();
 }
