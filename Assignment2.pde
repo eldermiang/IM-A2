@@ -21,26 +21,8 @@ void setup() {
   
   flock = new Flock();
   // Add an initial set of boids into the system
-  if (floor == 1 && month == 9){
-    for (int i = 0; i < xy.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 0 && month == 9) {
-    for (int i = 0; i < xy2.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 1 && month == 8) {
-    for (int i = 0; i < xy3.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 0 && month == 8) {
-    for (int i = 0; i < xy4.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
+  addBoids();
+  
   rectMode(CENTER);
   rectX = 100;
   rectY = height - 100;
@@ -227,4 +209,33 @@ void generateUIButtons() {
   
   text("August", rectX2, rectY);
   text("September", rectX2, rectY2);
+}
+
+void addBoids(){
+  int people = 0;
+  
+  if (floor == 1 && month == 9){
+    people = getPeople(xy);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 0 && month == 9) {
+    people = getPeople(xy2);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 1 && month == 8) {
+    people = getPeople(xy3);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 0 && month == 8) {
+    people = getPeople(xy4);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
 }
