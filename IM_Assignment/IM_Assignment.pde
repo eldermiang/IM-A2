@@ -1,5 +1,6 @@
+import beads.*;
+
 Flock flock;
-Boid boid;
 Table xy, xy2, xy3, xy4;
 int index = 1;
 int floor = 1;
@@ -12,10 +13,18 @@ color currentColor;
 color rectHighlight;
 PImage bg;
 PImage fishBG;
+AudioContext ac;
 
 
 void setup() {
   size(1024, 720);
+  
+  ac = new AudioContext();
+  
+  if (floor == 1) {
+    fishBGM();
+    }
+  
   xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T15:16:30.254&rToDate=2020-09-22T15:16:30.254&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, September
   xy2 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T18:59:33.300&rToDate=2020-09-22T18:59:33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, September
   
@@ -54,11 +63,18 @@ void setup() {
   
   rectHighlight = color(50);
   currentColor = color(0);
-  
-  
-  
 }
 
+public void fishBGM() {
+ String audioFileName = "/Users/User/Desktop/IM_Assignment/BGM/Level Music.mp3";
+ SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+ 
+ Envelope rate = new Envelope(ac, 1);
+ player.setRate(rate);
+ 
+ ac.out.addInput(player);
+ ac.start();
+}
 void draw() {
   update(mouseX, mouseY);
   
