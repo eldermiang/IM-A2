@@ -3,17 +3,23 @@ import org.jaudiolibs.beads.*;
 
 Flock flock;
 Table xy, xy2, xy3, xy4;
+
 int index = 1;
-int floor = 1;
+int floor = 0;
 int month = 9;
 int rectX, rectY, rectLength, rectHeight;
 int rectX2, rectY2;
+
 boolean overFloor0, overFloor1;
 boolean september, august;
+boolean switchTrack;
+
 color currentColor;
 color rectHighlight;
+
 PImage groundBG, fishBG;
-AudioContext ac;
+
+AudioContext ac = new AudioContext();
 
 void setup() {
   size(1024, 720);
@@ -22,7 +28,7 @@ void setup() {
   xy3 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, August
   xy4 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, August
   
-  ac = new AudioContext();
+  //ac = new AudioContext();
   
   flock = new Flock();
   // Add an initial set of boids into the system
@@ -41,9 +47,7 @@ void setup() {
   groundBG = loadImage("Images/Dirt_Background.jpg");
   fishBG = loadImage("Images/Fish_Background.png");
   
-  if (floor == 1) {
-    fishBGM();
-  }
+  playBGM();
 }
 
 void draw() {
@@ -255,13 +259,23 @@ void addBoids(){
   }
 }
 
-void fishBGM() {
-  String audioFileName = "Sounds/BGM/Level Music.mp3";
-  SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
-  
-  Envelope rate = new Envelope(ac, 1);
-  player.setRate(rate);
-  
-  ac.out.addInput(player);
-  ac.start();
+void playBGM() {
+    //Note: Only the full file path seems to run with this method, please make sure to change the file path
+    ac.out.clearInputConnections();
+    String audioFileName = "placeholder";
+    
+    if (floor == 1){
+      audioFileName = "/Users/jacks/OneDrive/Documents/Processing/Assignment2/Sounds/BGM/Level Music.mp3";
+    }
+    else if (floor == 0){
+      audioFileName = "/Users/jacks/OneDrive/Documents/Processing/Assignment2/Sounds/BGM/BGM_Menu.mp3";
+    }
+    
+    SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+    
+    Envelope rate = new Envelope(ac, 1);
+    player.setRate(rate);
+    
+    ac.out.addInput(player);
+    ac.start();
 }
