@@ -66,85 +66,9 @@ void draw() {
   }
   
   
-  if (overFloor0) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  
-  rect(rectX, rectY, rectLength, rectHeight); //Floor 0
-  
-  if (overFloor1) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  
-  rect(rectX, rectY2, rectLength, rectHeight); //Floor 1
-  
-  if (august) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  rect(rectX2, rectY, rectLength, rectHeight); //August
-  
-  if (september) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  rect(rectX2, rectY2, rectLength, rectHeight); //September
-  
-  
-  fill(255);
-  textAlign(CENTER, CENTER);
-  text("Floor 0", rectX, rectY);
-  text("Floor 1", rectX, rectY2);
-  
-  text("August", rectX2, rectY);
-  text("September", rectX2, rectY2);
-  
   flock.run();
-  textAlign(BASELINE);
-  textSize(32);
-  if (floor == 1 && month == 9){
-    text(getPeople(xy), 10, 30);
-    text(getDate("START", xy), 200, 28);
-    text(getDate("END", xy), 200, 56);
-  }
-  else if (floor == 0 && month == 9){
-    text(getPeople(xy2), 10, 30);
-    text(getDate("START", xy2), 200, 28);
-    text(getDate("END", xy2), 200, 56);
-  }
-  else if (floor == 1 && month == 8){
-    text(getPeople(xy3), 10, 30);
-    text(getDate("START", xy3), 200, 28);
-    text(getDate("END", xy3), 200, 56);
-  }
-  else if (floor == 0 && month == 8){
-    text(getPeople(xy4), 10, 30);
-    text(getDate("START", xy4), 200, 28);
-    text(getDate("END", xy4), 200, 56);
-  }
-  
-  text("Floor: " + floor + " Month: " + month, 600, 28);
-  
-  //int d = day();    // Values from 1 - 31
-  //int m = month();  // Values from 1 - 12
-  //int y = year();   // 2003, 2004, 2005, etc.
-
-  //String s = String.valueOf(d);
-  //text(s, 200, 28);
-  //s = String.valueOf(m);
-  //text(s, 200, 56); 
-  //s = String.valueOf(y);
-  //text(s, 200, 84);
+  generateUIButtons();
+  generateUIText();
   
   //text(mouseX, 200, 84);
   //text(mouseY, 200, 112);
@@ -230,4 +154,77 @@ String getDate(String period, Table table) {
     date = "Unknown";
   }
   return date;
+}
+
+void generateUIText() {
+  textAlign(BASELINE);
+  textSize(32);
+  fill(50);
+  if (floor == 1 && month == 9){
+    text(getPeople(xy), 10, 30);
+    text(getDate("START", xy), 200, 28);
+    text(getDate("END", xy), 200, 56);
+  }
+  else if (floor == 0 && month == 9){
+    text(getPeople(xy2), 10, 30);
+    text(getDate("START", xy2), 200, 28);
+    text(getDate("END", xy2), 200, 56);
+  }
+  else if (floor == 1 && month == 8){
+    text(getPeople(xy3), 10, 30);
+    text(getDate("START", xy3), 200, 28);
+    text(getDate("END", xy3), 200, 56);
+  }
+  else if (floor == 0 && month == 8){
+    text(getPeople(xy4), 10, 30);
+    text(getDate("START", xy4), 200, 28);
+    text(getDate("END", xy4), 200, 56);
+  }
+  
+  text("Floor: " + floor + " Month: " + month, 600, 28);
+}
+
+void generateUIButtons() {
+  if (overFloor0) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX, rectY, rectLength, rectHeight); //Floor 0
+  
+  if (overFloor1) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX, rectY2, rectLength, rectHeight); //Floor 1
+  
+  if (august) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  rect(rectX2, rectY, rectLength, rectHeight); //August
+  
+  if (september) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  rect(rectX2, rectY2, rectLength, rectHeight); //September
+  
+  
+  fill(255);
+  textAlign(CENTER, CENTER);
+  text("Floor 0", rectX, rectY);
+  text("Floor 1", rectX, rectY2);
+  
+  text("August", rectX2, rectY);
+  text("September", rectX2, rectY2);
 }

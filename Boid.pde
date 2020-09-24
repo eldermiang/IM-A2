@@ -90,13 +90,13 @@ class Boid {
     rotate(theta);
    
     //Test Ant Shape
-    generateAnt();
+    //generateAnt();
    
-    //beginShape(TRIANGLES);
-    //vertex(0, -r*2);
-    //vertex(-r, r*2);
-    //vertex(r, r*2);
-    //endShape();
+    beginShape(TRIANGLES);
+    vertex(0, -r*2);
+    vertex(-r, r*2);
+    vertex(r, r*2);
+    endShape();
     
     popMatrix();
   }
