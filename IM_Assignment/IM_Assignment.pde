@@ -69,7 +69,7 @@ void setup() {
   playBGM();
   
   speakerX = 10;
-  speakerY = 10;
+  speakerY = 60;
   speakerLength = 50;
   speakerHeight = 50;
   
@@ -183,9 +183,9 @@ void mousePressed() {
   }
   else {
   ac.start();
-  line(35,13, 35,25);
-  line(40,8, 40,30);
-  line(45,3, 45,35);
+  line(35,63, 35,75);
+  line(40,58, 40,80);
+  line(45,53, 45,85);
   }
 }
 
@@ -322,8 +322,8 @@ void generateUIButtons() {
 void drawSpeaker() {
   fill(0);
   stroke(0);
-  rect(15,18,13,15); //Speaker
-  triangle(13,17,30,35,30,3);
+  rect(15,68,13,18); //Speaker
+  triangle(13,67,30,85,30,53);
 }
 
 void addBoids(){
