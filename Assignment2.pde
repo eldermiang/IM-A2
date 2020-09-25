@@ -92,12 +92,12 @@ void setup() {
   
   rectHighlight = color(50);
   currentColor = color(0);
-  groundBG = loadImage("Images/Dirt_Background.jpg");
-  fishBG = loadImage("Images/Fish_Background.png");
+  groundBG = loadImage("data/Images/Dirt_Background.jpg");
+  fishBG = loadImage("data/Images/Fish_Background.png");
   
-  groundKey = loadImage("Images/Ground_Key.png");
-  fishKey = loadImage("Images/Fish_Key.png");
-  airKey = loadImage("Images/Air_Key.png");
+  groundKey = loadImage("data/Images/Ground_Key.png");
+  fishKey = loadImage("data/Images/Fish_Key.png");
+  airKey = loadImage("data/Images/Air_Key.png");
   
   speakerX = 10;
   speakerY = 60;
@@ -558,13 +558,13 @@ void playBGM() {
     String audioFileName = "placeholder";
     float volume = 0.5;
     if (floor == 1){
-      audioFileName = "./Sounds/BGM/Level Music.mp3";
+      audioFileName = "./data/Sounds/BGM/Level Music.mp3";
     }
     else if (floor == 0){
-      audioFileName = "./Sounds/BGM/BGM_Menu.mp3";
+      audioFileName = "./data/Sounds/BGM/BGM_Menu.mp3";
     }
     else if (floor == 2){
-      audioFileName = "./Sounds/BGM/Floor 2.mp3"; //Placeholder
+      audioFileName = "./data/Sounds/BGM/Floor 2.mp3"; //Placeholder
     }
     
     SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(sketchPath(audioFileName)));
@@ -582,7 +582,7 @@ void playBGM() {
 }
 
 void playSFX() {
-    String audioFileName = "./Sounds/SFX/Button_Click.wav";
+    String audioFileName = "./data/Sounds/SFX/Button_Click.wav";
     float volume = 0.5;
     
     SamplePlayer player = new SamplePlayer(ac2, SampleManager.sample(sketchPath(audioFileName)));
