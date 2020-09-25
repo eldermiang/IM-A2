@@ -118,6 +118,7 @@ void draw() {
   
   generateUIButtons();
   generateUIText();
+  legend();
   
   //text(mouseX, 200, 84);
   //text(mouseY, 200, 112);  
@@ -450,6 +451,21 @@ void generateClouds() {
   if (Cloud3 > ra) {
    Cloud3 = 0; 
   }
+}
+
+void legend() {
+  if (floor == 0) {
+  image(groundKey, 820,100);
+  }
+  
+  if (floor == 1) {
+  image(fishKey, 820,100);
+  }
+  
+  if (floor == 2) {
+  image(airKey, 820,100);
+  }
+  
 }
 
 void keyPressed() {
