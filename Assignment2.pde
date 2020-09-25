@@ -9,7 +9,7 @@ Table xy, xy2, xy3, xy4, xy5, xy6, xy7, xy8, xy9, xy10, xy11, xy12;
 
 int index = 1;
 int floor = 0;
-int month = 9;
+int month = 4;
 int rectX, rectY, rectLength, rectHeight;
 int rectX2, rectY2;
 int rectY3, rectX3;
@@ -32,6 +32,7 @@ PImage groundBG, fishBG;
 PImage groundKey, fishKey, airKey;
 
 AudioContext ac = new AudioContext();
+AudioContext ac2 = new AudioContext();
 
 int Cloud1 = (int)random(-100, 1300);
 int Cloud2 = (int)random(-100, 1300);
@@ -197,35 +198,43 @@ void mousePressed() {
   if (overFloor0) {
     floor = 0;
     frameCount = -1; // Resets the sketch
+    playSFX();
   }
   else if (overFloor1) {
     floor = 1;
     frameCount = -1; // Resets the sketch
+    playSFX();
   }
   else if (overFloor2) {
     floor = 2;
     frameCount = -1;
+    playSFX();
   }
   
   if (august) {
     month = 8;
     frameCount = -1;
+    playSFX();
   }
   else if (september) {
     month = 9;
     frameCount = -1;
+    playSFX();
   }
   else if (may) {
     month = 5;
     frameCount = -1;
+    playSFX();
   }
   else if (april) {
     month = 4;
     frameCount = -1;
+    playSFX();
   }
   
   if (boringGraphHovered) {
     boringGraph.enabled = true; 
+    playSFX();
   }
   if (graphBackHovered) {
     boringGraph.enabled = false; 
@@ -528,11 +537,12 @@ void playBGM() {
       audioFileName = "./Sounds/BGM/BGM_Menu.mp3";
     }
     else if (floor == 2){
-      audioFileName = "./Sounds/BGM/BGM_Menu.mp3"; //Placeholder
-      volume = 0;
+      audioFileName = "./Sounds/BGM/Floor 2.mp3"; //Placeholder
     }
     
     SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(sketchPath(audioFileName)));
+    
+    player.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS);
     
     Gain g = new Gain(ac, 2, volume);
     g.addInput(player);
@@ -542,6 +552,22 @@ void playBGM() {
     
     ac.out.addInput(g);
     ac.start();
+}
+
+void playSFX() {
+    String audioFileName = "./Sounds/SFX/Button_Click.wav";
+    float volume = 0.5;
+    
+    SamplePlayer player = new SamplePlayer(ac2, SampleManager.sample(sketchPath(audioFileName)));
+    
+    Gain g = new Gain(ac2, 2, volume);
+    g.addInput(player);
+    
+    Envelope rate = new Envelope(ac2, 1);
+    player.setRate(rate);
+    
+    ac2.out.addInput(g);
+    ac2.start();
 }
 
 void generateClouds() {
@@ -605,6 +631,7 @@ void legend() {
 void keyPressed() {
   if (key == TAB) {
     boringGraph.enabled = !boringGraph.enabled;
+    playSFX();
   } 
 }
 
