@@ -147,12 +147,7 @@ void update(int x, int y) {
   else {
     august = september = false;
   }
- if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
-  overSpeaker ^= true;
-  }
-  else{
-  overSpeaker = false;
-  }
+ 
 }
 
 void mousePressed() {
@@ -179,6 +174,10 @@ void mousePressed() {
     month = 9;
     frameCount = -1;
   }
+   if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
+  overSpeaker = !overSpeaker;
+  }
+  
   if(overSpeaker) {
   ac.stop();
   line(35,13, 35,25);
