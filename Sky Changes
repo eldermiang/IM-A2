@@ -1,0 +1,244 @@
+
+//Buttons and Cloud before setup
+
+//Buttons
+int BlueX, BlueY;      // Position of blue button
+int RedX, RedY;  // Position of red button
+int GreenX, GreenY; // pos of green
+
+int BtnSize = 30;     // Diameter of button
+
+
+color BlueColor, RedColor, GreenColor, baseColor;
+color BlueHighlight, RedHighlight, GreenHighlight;
+color currentColor;
+
+boolean BlueOver = false;
+boolean RedOver = false;
+boolean GreenOver = false;
+
+//Cloud starting points
+int Cloud1 = (int)random(-100, 1300);
+int Cloud2 = (int)random(-100, 1300);
+int Cloud3 = (int)random(-100, 1300);
+
+
+
+
+
+
+//In void (setup)
+ 
+  //color of blu
+  BlueColor = color(100, 200, 255);
+  BlueHighlight = color(130, 230, 255);
+  //color of red
+  RedColor = color(255, 65, 80);
+  RedHighlight = color(255, 95, 110);
+  //green
+  GreenColor = color(0, 170, 70);
+  GreenHighlight = color(155, 255, 170);
+  
+  baseColor = color(100);
+  currentColor = baseColor;
+  RedX = 950;
+  RedY = 50;
+  BlueX = 900;
+  BlueY = 50;
+  GreenX = 850;
+  GreenY = 50;
+  ellipseMode(CENTER);
+
+
+
+
+
+//In void Draw
+
+// Clouds
+
+noStroke();
+
+  int ra = int(random(1700, 2500)); //end point reset
+ int ra1 = int(random(1, 1.6)); //speed 1
+  int ra2 = int(random(1.5, 2.0)); //speed 2
+  int ra3 = int(random(1.4, 2.1)); //speed 3
+  
+  fill(255, 255, 255, 50); //cloud colour
+  ellipse(Cloud1, 140, 970, 900);
+  Cloud1 = Cloud1 + ra1;
+  if (Cloud1 > ra) {
+   Cloud1 = -600; 
+  }
+  ellipse(Cloud1+40, 190, 660, 410);
+  Cloud1 = Cloud1 + ra2;
+  if (Cloud1 > ra) {
+   Cloud1 = -400; 
+  }
+ ellipse(Cloud2, 310, 760, 900);
+  Cloud2 = Cloud2 - ra3;
+  if (Cloud3 < -700) {
+   Cloud3 = 1500; 
+  }
+  
+  ellipse(Cloud2-300, 370, 900, 400);
+  Cloud2 = Cloud2 - ra1/2;
+  if (Cloud2 < -900) {
+   Cloud2 = 1700; 
+  }
+  ellipse(Cloud3, 660, 330, 520);
+  Cloud3 = Cloud3 + ra3/2;
+  if (Cloud3 > ra) {
+   Cloud3 = -420; 
+  }
+  
+  ellipse(Cloud3-200, 570, 770, 380);
+  Cloud3 = Cloud3 + ra2/2;
+  if (Cloud3 > ra) {
+   Cloud3 = -300; 
+  }
+  
+  fill(55);
+  textSize(24);
+  text("Bird Colour", 840, 30);
+  
+  
+  
+  
+  
+  // In void (draw)
+  
+  //buttons
+update(mouseX, mouseY);
+ // background(currentColor);
+  
+  if (BlueOver) {
+    fill(BlueHighlight);
+  } else {
+    fill(BlueColor);
+  }
+  stroke(255);
+  ellipse(BlueX, BlueY, BtnSize, BtnSize);
+  
+  if (RedOver) {
+    fill(RedHighlight);
+  } else {
+    fill(RedColor);
+  }
+  stroke(255);
+  ellipse(RedX, RedY, BtnSize, BtnSize);
+  
+   if (GreenOver) {
+    fill(GreenHighlight);
+  } else {
+    fill(GreenColor);
+  }
+  stroke(255);
+  ellipse(GreenX, GreenY, BtnSize, BtnSize);
+
+
+
+
+//void (update)
+void update(int x, int y) {
+  if ( overCircle(RedX, RedY, BtnSize) ) {
+    RedOver = true;
+    BlueOver = false;
+    GreenOver = false;
+  } else if ( overCircle(BlueX, BlueY, BtnSize) ) {
+    BlueOver = true;
+    RedOver = false;
+    GreenOver = false;
+     } else if ( overCircle(GreenX, GreenY, BtnSize) ) {
+    GreenOver = true;
+    BlueOver = false;
+    RedOver = false;
+  } else {
+    RedOver = BlueOver = GreenOver = false;
+  }
+}
+
+
+
+//in void mouse pressed
+void mousePressed() {
+  if (RedOver) {
+    currentColor = RedColor;
+  }
+  if (BlueOver) {
+    currentColor = BlueColor;
+  }
+  if (GreenOver) {
+    currentColor = GreenColor;
+  }
+}
+
+//rest of button
+boolean overRect(int x, int y, int width, int height)  {
+  if (mouseX >= x && mouseX <= x+width && 
+      mouseY >= y && mouseY <= y+height) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+boolean overCircle(int x, int y, int diameter) {
+  float disX = x - mouseX;
+  float disY = y - mouseY;
+  if (sqrt(sq(disX) + sq(disY)) < diameter/2 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+//In Boid Class
+ r = 0.4;
+    maxspeed = 2;
+    maxforce = 0.03;
+    
+    
+    //in void render
+    
+     void render() {
+    // Draw a triangle rotated in the direction of velocity
+    float theta = velocity.heading2D() + radians(90);
+    // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
+    
+    fill(currentColor);
+    noStroke();
+    pushMatrix();
+    translate(position.x, position.y);
+    rotate(theta);
+   
+   
+   
+    beginShape();
+  
+  vertex(50*r, 10*r);
+  
+  vertex(45*r, 20*r);
+  vertex(20*r, 15*r);
+  vertex(10*r, 20*r);
+  vertex(35*r, 35*r);
+  vertex(45*r, 30*r);
+  vertex(40*r, 45*r);
+  
+  vertex(50*r, 50*r);
+  
+  vertex(60*r, 45*r);
+  vertex(55*r, 30*r);
+  vertex(65*r, 35*r);
+  vertex(90*r, 20*r);
+  vertex(80*r, 15*r);
+  vertex(55*r, 20*r);
+  
+    endShape(CLOSE);
+    popMatrix();
+  }
+  
+  
+  
+  
