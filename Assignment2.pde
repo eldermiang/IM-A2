@@ -31,6 +31,11 @@ color rectHighlight;
 PImage groundBG, fishBG;
 PImage groundKey, fishKey, airKey;
 
+boolean overSpeaker, muted;
+int speakerX, speakerY, speakerLength,speakerHeight;
+
+
+
 AudioContext ac = new AudioContext();
 AudioContext ac2 = new AudioContext();
 
@@ -93,6 +98,12 @@ void setup() {
   groundKey = loadImage("Images/Ground_Key.png");
   fishKey = loadImage("Images/Fish_Key.png");
   airKey = loadImage("Images/Air_Key.png");
+  
+  speakerX = 10;
+  speakerY = 10;
+  speakerLength = 50;
+  speakerHeight = 50;
+
   
   playBGM();
   
@@ -189,6 +200,13 @@ void update(int x, int y) {
     august = september = may = april = false;
   }
   
+  if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
+  overSpeaker = true;
+  }
+  else{
+  overSpeaker = false;
+  }
+  
   boringGraphHovered = overButton(rectX4, rectY, rectLength, rectHeight);
   graphBackHovered = false;
 }
@@ -230,6 +248,15 @@ void mousePressed() {
     month = 4;
     frameCount = -1;
     playSFX();
+  }
+  
+  if(overSpeaker) {
+    if (muted != true) {
+      muted = true;
+    }
+    else {
+      muted = false;
+    }
   }
   
   if (boringGraphHovered) {
@@ -415,6 +442,8 @@ void generateUIButtons() {
     fill(currentColor);
   }
   rect(rectX4, rectY, rectLength, rectHeight); //X
+  
+  drawSpeaker();
   
   
   fill(255);
@@ -626,6 +655,13 @@ void legend() {
   image(airKey, 820,100);
   }
   
+}
+
+void drawSpeaker() {
+  fill(0);
+  stroke(0);
+  rect(15,18,13,15); //Speaker
+  triangle(13,17,30,35,30,3);
 }
 
 void keyPressed() {
