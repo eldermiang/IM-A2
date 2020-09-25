@@ -1,6 +1,9 @@
 import beads.*;
 import org.jaudiolibs.beads.*;
 
+int WIDTH = 1024;
+int HEIGHT = 720;
+  
 Flock flock;
 Table xy, xy2, xy3, xy4, xy5, xy6;
 
@@ -10,10 +13,15 @@ int month = 9;
 int rectX, rectY, rectLength, rectHeight;
 int rectX2, rectY2;
 int rectY3, rectX3;
+int rectX4 = WIDTH - 66;
+
+int backX = rectX4 - 10;
+int backY = 42;
 
 boolean overFloor0, overFloor1, overFloor2, overFloor3;
 boolean september, august;
 boolean switchTrack;
+boolean boringGraphHovered, graphBackHovered;
 
 color currentColor;
 color rectHighlight;
@@ -26,8 +34,11 @@ int Cloud1 = (int)random(-100, 1300);
 int Cloud2 = (int)random(-100, 1300);
 int Cloud3 = (int)random(-100, 1300);
 
+BoringGraph boringGraph = null;
+
 void setup() {
-  size(1024, 720);
+  surface.setSize(WIDTH, HEIGHT);
+  
   xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T15:16:30.254&rToDate=2020-09-22T15:16:30.254&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, September
   xy2 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T18:59:33.300&rToDate=2020-09-22T18:59:33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, September
   
@@ -40,7 +51,6 @@ void setup() {
   // Add an initial set of boids into the system
   addBoids();
   
-  rectMode(CENTER);
   rectX = 65;
   rectY = height - 35;
   
@@ -60,9 +70,22 @@ void setup() {
   fishBG = loadImage("Images/Fish_Background.png");
   
   playBGM();
+  
+  if (boringGraph == null || boringGraph.currentFloor != floor) {
+    boringGraph = new BoringGraph(WIDTH, HEIGHT, floor);
+  }
 }
 
 void draw() {
+  rectMode(CENTER);
+  
+  if (boringGraph.enabled) {
+    boringGraph.draw();
+    graphBackHovered = overButton(backX, backY, rectLength, rectHeight);
+    generateGraphBackButton();
+    return; 
+  }
+  
   update(mouseX, mouseY);
   
   if (floor == 0) {
@@ -82,11 +105,14 @@ void draw() {
   
   
   flock.run();
+  
+
+  
   generateUIButtons();
   generateUIText();
   
   //text(mouseX, 200, 84);
-  //text(mouseY, 200, 112);
+  //text(mouseY, 200, 112);  
 }
 
 void update(int x, int y) {
@@ -121,6 +147,9 @@ void update(int x, int y) {
   else {
     august = september = false;
   }
+  
+  boringGraphHovered = overButton(rectX4, rectY, rectLength, rectHeight);
+  graphBackHovered = false;
 }
 
 void mousePressed() {
@@ -145,6 +174,13 @@ void mousePressed() {
   else if (september) {
     month = 9;
     frameCount = -1;
+  }
+  
+  if (boringGraphHovered) {
+    boringGraph.enabled = true; 
+  }
+  if (graphBackHovered) {
+    boringGraph.enabled = false; 
   }
 }
 
@@ -264,6 +300,14 @@ void generateUIButtons() {
   }
   rect(rectX3, rectY, rectLength, rectHeight); //September
   
+  if (boringGraphHovered) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  rect(rectX4, rectY, rectLength, rectHeight); //X
+  
   
   fill(255);
   textAlign(CENTER, CENTER);
@@ -274,6 +318,25 @@ void generateUIButtons() {
   
   text("August", rectX2, rectY);
   text("September", rectX3, rectY);
+  
+  textSize(16);
+  text("Boring Graph", rectX4, rectY);
+}
+
+void generateGraphBackButton() {
+  if (graphBackHovered) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  stroke(255);
+  rect(backX, backY, rectLength, rectHeight); 
+  noStroke();
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  text("Back (TAB)", backX, backY);
 }
 
 void addBoids(){
@@ -312,23 +375,21 @@ void addBoids(){
 }
 
 void playBGM() {
-    //Note: Only the full file path seems to run with this method, please make sure to change the file path
     ac.out.clearInputConnections();
     String audioFileName = "placeholder";
     float volume = 0.5;
     if (floor == 1){
-      audioFileName = "/Users/jacks/OneDrive/Documents/Processing/Assignment2/Sounds/BGM/Level Music.mp3";
+      audioFileName = "./Sounds/BGM/Level Music.mp3";
     }
     else if (floor == 0){
-      audioFileName = "/Users/jacks/OneDrive/Documents/Processing/Assignment2/Sounds/BGM/BGM_Menu.mp3";
+      audioFileName = "./Sounds/BGM/BGM_Menu.mp3";
     }
     else if (floor == 2){
-      audioFileName = "/Users/jacks/OneDrive/Documents/Processing/Assignment2/Sounds/BGM/BGM_Menu.mp3"; //Placeholder
+      audioFileName = "./Sounds/BGM/BGM_Menu.mp3"; //Placeholder
       volume = 0;
     }
     
-    SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
-    
+    SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(sketchPath(audioFileName)));
     
     Gain g = new Gain(ac, 2, volume);
     g.addInput(player);
@@ -359,7 +420,7 @@ void generateClouds() {
   if (Cloud1 > ra) {
    Cloud1 = 0; 
   }
- ellipse(Cloud2, 310, 160, 100);
+  ellipse(Cloud2, 310, 160, 100);
   Cloud2 = Cloud2 + ra2;
   if (Cloud3 > ra) {
    Cloud3 = 0; 
@@ -381,4 +442,18 @@ void generateClouds() {
   if (Cloud3 > ra) {
    Cloud3 = 0; 
   }
+}
+
+void keyPressed() {
+  if (key == TAB) {
+    boringGraph.enabled = !boringGraph.enabled;
+  } 
+}
+
+void keyReleased() {
+  if (!boringGraph.enabled) {
+    return;
+  }
+  
+  boringGraph.keyReleased(); 
 }
