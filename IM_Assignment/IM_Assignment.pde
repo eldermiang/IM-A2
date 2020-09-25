@@ -147,8 +147,8 @@ void update(int x, int y) {
   else {
     august = september = false;
   }
-  if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
-  overSpeaker = true;
+ if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
+  overSpeaker ^= true;
   }
   else{
   overSpeaker = false;
@@ -156,6 +156,7 @@ void update(int x, int y) {
 }
 
 void mousePressed() {
+  
   //flock.addBoid(new Boid(mouseX, mouseY));
   if (overFloor0) {
     floor = 0;
@@ -184,13 +185,12 @@ void mousePressed() {
   line(40,8, 40,30);
   line(45,3, 45,35);
   }
+  else {
+  ac.start();
+  }
 }
 
-void mouseReleased() {
-if(overSpeaker) {
-ac.start();
-}
-}
+
 boolean overButton (int x, int y, int width, int height) {
   if (mouseX >= (x - width/2) && mouseX <= (x + width/2) && mouseY >= (y - height / 2) && mouseY <= (y + height/2)) {
     return true;
