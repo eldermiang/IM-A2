@@ -1,197 +1,139 @@
 import beads.*;
+import org.jaudiolibs.beads.*;
 
 Flock flock;
-Table xy, xy2, xy3, xy4;
+Table xy, xy2, xy3, xy4, xy5, xy6;
+
 int index = 1;
-int floor = 1;
+int floor = 0;
 int month = 9;
 int rectX, rectY, rectLength, rectHeight;
 int rectX2, rectY2;
-boolean overFloor0, overFloor1;
+int rectY3, rectX3;
+
+boolean overFloor0, overFloor1, overFloor2, overFloor3;
 boolean september, august;
+boolean switchTrack;
+
 color currentColor;
 color rectHighlight;
-PImage bg;
-PImage fishBG;
-AudioContext ac;
 
+PImage groundBG, fishBG;
+PImage groundKey, fishKey, airKey;
+
+AudioContext ac = new AudioContext();
+
+int Cloud1 = (int)random(-100, 1300);
+int Cloud2 = (int)random(-100, 1300);
+int Cloud3 = (int)random(-100, 1300);
 
 void setup() {
   size(1024, 720);
-  
-  ac = new AudioContext();
-  
-  if (floor == 1) {
-    fishBGM();
-    }
-  
   xy = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T15:16:30.254&rToDate=2020-09-22T15:16:30.254&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, September
   xy2 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T18:59:33.300&rToDate=2020-09-22T18:59:33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, September
   
   xy3 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC00.05+%28In%29", "csv"); //F1, August
   xy4 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-08-15T18%3A59%3A33.300&rToDate=2020-08-22T18%3A59%3A33.300&rFamily=people&rSensor=+PC01.11+%28In%29", "csv"); //F0, August
   
+  xy5 = loadTable("http://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2020-09-15T17%3A13%3A46&rToDate=2020-09-22T17%3A13%3A46&rFamily=people&rSensor=+PC02.14+%28In%29", "csv"); //F2, September
+  
   flock = new Flock();
   // Add an initial set of boids into the system
-  if (floor == 1 && month == 9){
-    for (int i = 0; i < xy.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 0 && month == 9) {
-    for (int i = 0; i < xy2.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 1 && month == 8) {
-    for (int i = 0; i < xy3.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
-  else if (floor == 0 && month == 8) {
-    for (int i = 0; i < xy4.getInt(0, 1); i++) {
-      flock.addBoid(new Boid(width/2,height/2));
-    }
-  }
+  addBoids();
+  
   rectMode(CENTER);
-  rectX = 100;
-  rectY = height - 100;
-  rectX2 = rectX + 200;
-  rectY2 = rectY - 100;
-  rectLength = 175;
+  rectX = 65;
+  rectY = height - 35;
+  
+  rectX2 = rectX + 135;
+  rectY2 = rectY - 70;
+  
+  rectX3 = rectX2 + 135;
+  rectY3 = rectY2 - 70;
+  
+  
+  rectLength = 120;
   rectHeight = rectLength/2;
   
   rectHighlight = color(50);
   currentColor = color(0);
+  groundBG = loadImage("Images/Dirt_Background.jpg");
+  fishBG = loadImage("Images/Fish_Background.png");
+  
+  groundKey = loadImage("Images/Ground_Key.png");
+  fishKey = loadImage("Images/Fish_Key.png");
+  airKey = loadImage("Images/Air_Key.png");
+  
+  playBGM();
 }
 
-public void fishBGM() {
- String audioFileName = "/Users/User/Desktop/IM_Assignment/BGM/Level Music.mp3";
- SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
- 
- Envelope rate = new Envelope(ac, 1);
- player.setRate(rate);
- 
- ac.out.addInput(player);
- ac.start();
-}
 void draw() {
   update(mouseX, mouseY);
   
   if (floor == 0) {
-    bg = loadImage("Images/Dirt_Background.jpg");
-    background(bg);
-    
+    background(groundBG);
   }
   else if (floor == 1) {
-    fishBG = loadImage("Images/Fish_Background.png");
     background(fishBG);
   }
-  
-  
-  if (overFloor0) {
-    fill(rectHighlight);
+  else if (floor == 2) {
+    background(225, 245, 255);
+    noStroke();
+    generateClouds();
   }
-  else {
-    fill(currentColor);
-  }
+  //else if (floor == 3) {
+  //  background;
+  //}
   
-  rect(rectX, rectY, rectLength, rectHeight); //Floor 0
-  
-  if (overFloor1) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  
-  rect(rectX, rectY2, rectLength, rectHeight); //Floor 1
-  
-  if (august) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  rect(rectX2, rectY, rectLength, rectHeight); //August
-  
-  if (september) {
-    fill(rectHighlight);
-  }
-  else {
-    fill(currentColor);
-  }
-  rect(rectX2, rectY2, rectLength, rectHeight); //September
-  
-  
-  fill(255);
-  textAlign(CENTER, CENTER);
-  text("Floor 0", rectX, rectY);
-  text("Floor 1", rectX, rectY2);
-  
-  text("August", rectX2, rectY);
-  text("September", rectX2, rectY2);
   
   flock.run();
-  textAlign(BASELINE);
-  textSize(32);
-  if (floor == 1 && month == 9){
-    text(getPeople(xy), 10, 30);
-    text(getDate("START", xy), 200, 28);
-    text(getDate("END", xy), 200, 56);
-  }
-  else if (floor == 0 && month == 9){
-    text(getPeople(xy2), 10, 30);
-    text(getDate("START", xy2), 200, 28);
-    text(getDate("END", xy2), 200, 56);
-  }
-  else if (floor == 1 && month == 8){
-    text(getPeople(xy3), 10, 30);
-    text(getDate("START", xy3), 200, 28);
-    text(getDate("END", xy3), 200, 56);
-  }
-  else if (floor == 0 && month == 8){
-    text(getPeople(xy4), 10, 30);
-    text(getDate("START", xy4), 200, 28);
-    text(getDate("END", xy4), 200, 56);
-  }
-  
-  text("Floor: " + floor + " Month: " + month, 600, 28);
-  
-  //int d = day();    // Values from 1 - 31
-  //int m = month();  // Values from 1 - 12
-  //int y = year();   // 2003, 2004, 2005, etc.
-
-  //String s = String.valueOf(d);
-  //text(s, 200, 28);
-  //s = String.valueOf(m);
-  //text(s, 200, 56); 
-  //s = String.valueOf(y);
-  //text(s, 200, 84);
-  
+  generateUIButtons();
+  generateUIText();
+  legend();
   //text(mouseX, 200, 84);
   //text(mouseY, 200, 112);
 }
 
+void legend() {
+  if (floor == 0) {
+  image(groundKey, 820,595);
+  }
+  
+  if (floor == 1) {
+  image(fishKey, 820,595);
+  }
+  
+  if (floor == 2) {
+  image(airKey, 820,595);
+  }
+  
+}
 void update(int x, int y) {
-  if (overFloor(rectX, rectY, rectLength, rectHeight)){
+  if (overButton(rectX, rectY, rectLength, rectHeight)){ //Floor 0
     overFloor0 = true;
     overFloor1 = false;
+    overFloor2 = false;
   }
-  else if(overFloor(rectX, rectY2, rectLength, rectHeight))
+  else if(overButton(rectX, rectY2, rectLength, rectHeight)) //Floor 1
   {
     overFloor0 = false;
     overFloor1 = true;
+    overFloor2 = false;
+  }
+  else if(overButton(rectX, rectY3, rectLength, rectHeight)){
+    overFloor0 = false;
+    overFloor1 = false;
+    overFloor2 = true;
   }
   else {
-    overFloor0 = overFloor1 = false;
+    overFloor0 = overFloor1 = overFloor2 = false;
   }
   
-  if (overFloor(rectX2, rectY, rectLength, rectHeight)){
+  if (overButton(rectX2, rectY, rectLength, rectHeight)){ //August
     august = true;
     september = false;
   }
-  else if (overFloor(rectX2, rectY2, rectLength, rectHeight)){
+  else if (overButton(rectX3, rectY, rectLength, rectHeight)){ //September
     august = false;
     september = true;
   }
@@ -210,6 +152,10 @@ void mousePressed() {
     floor = 1;
     frameCount = -1; // Resets the sketch
   }
+  else if (overFloor2) {
+    floor = 2;
+    frameCount = -1;
+  }
   
   if (august) {
     month = 8;
@@ -221,7 +167,7 @@ void mousePressed() {
   }
 }
 
-boolean overFloor (int x, int y, int width, int height) {
+boolean overButton (int x, int y, int width, int height) {
   if (mouseX >= (x - width/2) && mouseX <= (x + width/2) && mouseY >= (y - height / 2) && mouseY <= (y + height/2)) {
     return true;
   }
@@ -255,6 +201,207 @@ String getDate(String period, Table table) {
   return date;
 }
 
+void generateUIText() {
+  textAlign(BASELINE);
+  textSize(32);
+  fill(50);
+  
+  if (floor == 1 && month == 9){
+    text("People: " + getPeople(xy), 10, 30);
+    text("From: " + getDate("START", xy), 250, 28);
+    text("To: " + getDate("END", xy), 250, 56);
+  }
+  else if (floor == 0 && month == 9){
+    text("People: " + getPeople(xy2), 10, 30);
+    text("From: " + getDate("START", xy2), 250, 28);
+    text("To: " + getDate("END", xy2), 250, 56);
+  }
+  else if (floor == 1 && month == 8){
+    text("People: " + getPeople(xy3), 10, 30);
+    text("From: " + getDate("START", xy3), 250, 28);
+    text("To: " + getDate("END", xy3), 250, 56);
+  }
+  else if (floor == 0 && month == 8){
+    text("People: " + getPeople(xy4), 10, 30);
+    text("From: " + getDate("START", xy4), 250, 28);
+    text("To: " + getDate("END", xy4), 250, 56);
+  }
+  else if (floor == 2 && month == 9){
+    text("People: " + getPeople(xy5), 10, 30);
+    text("From: " + getDate("START", xy5), 250, 28);
+    text("To: " + getDate("END", xy5), 250, 56); 
+  }
+  
+  text("Floor: " + floor, 850, 28);
+  text("Month: " + month, 850, 56);
+}
+
+
+void generateUIButtons() {
+  if (overFloor0) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX, rectY, rectLength, rectHeight); //Floor 0
+  
+  if (overFloor1) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX, rectY2, rectLength, rectHeight); //Floor 1
+  
+  if (overFloor2) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX, rectY3, rectLength, rectHeight); //Floor 2
+  
+  
+  if (august) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  
+  rect(rectX2, rectY, rectLength, rectHeight); //August
+  
+  if (september) {
+    fill(rectHighlight);
+  }
+  else {
+    fill(currentColor);
+  }
+  rect(rectX3, rectY, rectLength, rectHeight); //September
+  
+  
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(20);
+  text("Floor 0", rectX, rectY);
+  text("Floor 1", rectX, rectY2);
+  text("Floor 2", rectX, rectY3);
+  
+  text("August", rectX2, rectY);
+  text("September", rectX3, rectY);
+}
+
+void addBoids(){
+  int people = 0;
+  
+  if (floor == 1 && month == 9){
+    people = getPeople(xy);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 0 && month == 9) {
+    people = getPeople(xy2);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 1 && month == 8) {
+    people = getPeople(xy3);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 0 && month == 8) {
+    people = getPeople(xy4);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2,height/2));
+    }
+  }
+  else if (floor == 2 && month == 9) {
+    people = getPeople(xy5);
+    for (int i = 0; i < (people/50); i++) {
+      flock.addBoid(new Boid(width/2, height/2));
+    }
+  }
+}
+
+void playBGM() {
+    //Note: Only the full file path seems to run with this method, please make sure to change the file path
+    ac.out.clearInputConnections();
+    String audioFileName = "placeholder";
+    float volume = 0.5;
+    if (floor == 1){
+      audioFileName = "/Users/User/Desktop/IM_Assignment/BGM/Level Music.mp3";
+    }
+    else if (floor == 0){
+      audioFileName = "/Users/User/Desktop/IM_Assignment/BGM/BGM_Menu.mp3";
+    }
+    else if (floor == 2){
+      audioFileName = "/Users/User/Desktop/IM_Assignment/BGM//BGM_Menu.mp3"; //Placeholder
+      volume = 0;
+    }
+    
+    SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+    
+    
+    Gain g = new Gain(ac, 2, volume);
+    g.addInput(player);
+    
+    Envelope rate = new Envelope(ac, 1);
+    player.setRate(rate);
+    
+    ac.out.addInput(g);
+    ac.start();
+}
+
+void generateClouds() {
+  ellipseMode(CENTER);
+  //clouds
+  int ra = int(random(1100, 2000)); //end point reset
+  int ra1 = int(random(1, 1.6)); //speed 1
+  int ra2 = int(random(1.7, 2.3)); //speed 2
+  int ra3 = int(random(1.4, 2.1)); //speed 3
+  
+  fill(255, 255, 255, 90); //cloud colour
+  ellipse(Cloud1, 140, 270, 150);
+  Cloud1 = Cloud1 + ra1;
+  if (Cloud1 > ra) {
+   Cloud1 = 0; 
+  }
+  ellipse(Cloud1+40, 190, 160, 110);
+  Cloud1 = Cloud1 + ra1;
+  if (Cloud1 > ra) {
+   Cloud1 = 0; 
+  }
+ ellipse(Cloud2, 310, 160, 100);
+  Cloud2 = Cloud2 + ra2;
+  if (Cloud3 > ra) {
+   Cloud3 = 0; 
+  }
+  
+  ellipse(Cloud2-30, 370, 300, 100);
+  Cloud2 = Cloud2 + ra2;
+  if (Cloud2 > ra) {
+   Cloud2 = 0; 
+  }
+  ellipse(Cloud3, 560, 330, 120);
+  Cloud3 = Cloud3 + ra3;
+  if (Cloud3 > ra) {
+   Cloud3 = 0; 
+  }
+  
+  ellipse(Cloud3-20, 570, 170, 180);
+  Cloud3 = Cloud3 + ra3;
+  if (Cloud3 > ra) {
+   Cloud3 = 0; 
+  }
+}
+
 class Boid {
   PVector position;
   PVector velocity;
@@ -282,9 +429,8 @@ class Boid {
   void run(ArrayList<Boid> boids) {
     flock(boids);
     update();
-    borders(); 
+    borders();
     render();
-    
   }
 
   void applyForce(PVector force) {
@@ -346,15 +492,26 @@ class Boid {
     pushMatrix();
     translate(position.x, position.y);
     rotate(theta);
-     
-    if (floor == 1) {
-    generateFish();
-    }
-    
-     if (floor == 0) {
-    generateAnt();
-    }
    
+    if (floor == 0) {
+      generateAnt();
+    }
+    else if (floor == 1) {
+      generateFish();
+    }
+    else if (floor == 2) {
+      generateBird();
+    }
+    //else if (floor == 3) {
+    
+    //}
+   
+    //beginShape(TRIANGLES);
+    //vertex(0, -r*2);
+    //vertex(-r, r*2);
+    //vertex(r, r*2);
+    //endShape();
+    
     popMatrix();
   }
 
@@ -471,16 +628,19 @@ class Boid {
    fill(0);
    ellipse (5, -15, 3, 3);//Eyes
    ellipse (-5, -15, 3, 3);
-   stroke(0);
+   stroke(255);
   }
   
-   void generateAnt(){
+  void generateAnt(){
     fill(0);
-    stroke(255);
+    stroke(210, 105, 30);
+    
     ellipse(0, 0, 15, 20); //Lower Body
     ellipse(-0, -10, 10, 20); //Upper Body
     ellipse(0, -20, 10, 15); //Head
-    stroke(255);
+    
+    stroke(210, 105, 30);
+    
     line(5, -25, 10, -30);  //Antenna Right
     line(-5, -25, -10, -30); //Antenna Left
     line(5, -15, 20, -20); //Upper Leg Right
@@ -489,8 +649,39 @@ class Boid {
     line(-5, -5, -20, -5); //Middle Leg Left
     line(8, 5, 20, 10); //Lower Leg Right
     line(-8, 5, -20, 10); //Lower Leg Left
+    
     stroke(255);
     fill(50);
+  }
+  
+  void generateBird() {
+    r = 0.4;
+    fill(100);
+    noStroke();
+    beginShape();
+    
+    vertex(50*r, 10*r);
+    
+    vertex(45*r, 20*r);
+    vertex(20*r, 15*r);
+    vertex(10*r, 20*r);
+    vertex(35*r, 35*r);
+    vertex(45*r, 30*r);
+    vertex(40*r, 45*r);
+    
+    vertex(50*r, 50*r);
+    
+    vertex(60*r, 45*r);
+    vertex(55*r, 30*r);
+    vertex(65*r, 35*r);
+    vertex(90*r, 20*r);
+    vertex(80*r, 15*r);
+    vertex(55*r, 20*r);
+  
+    endShape(CLOSE);
+    stroke(255);
+    fill(50);
+    r = 2.0;
   }
 }
 
@@ -510,5 +701,4 @@ class Flock {
   void addBoid(Boid b) {
     boids.add(b);
   }
-
 }
