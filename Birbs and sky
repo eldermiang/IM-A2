@@ -45,11 +45,11 @@ void setup() {
   
   baseColor = color(100);
   currentColor = baseColor;
-  RedX = 700;
+  RedX = 950;
   RedY = 50;
-  BlueX = 600;
+  BlueX = 900;
   BlueY = 50;
-  GreenX = 650;
+  GreenX = 850;
   GreenY = 50;
   ellipseMode(CENTER);
 }
@@ -60,10 +60,10 @@ void draw() {
   //clouds
   int ra = int(random(1100, 2000)); //end point reset
  int ra1 = int(random(1, 1.6)); //speed 1
-  int ra2 = int(random(1.7, 2.3)); //speed 2
+  int ra2 = int(random(1.5, 2.0)); //speed 2
   int ra3 = int(random(1.4, 2.1)); //speed 3
   
-  fill(255, 255, 255, 90); //cloud colour
+  fill(255, 255, 255, 50); //cloud colour
   ellipse(Cloud1, 140, 270, 150);
   Cloud1 = Cloud1 + ra1;
   if (Cloud1 > ra) {
@@ -75,15 +75,15 @@ void draw() {
    Cloud1 = 0; 
   }
  ellipse(Cloud2, 310, 160, 100);
-  Cloud2 = Cloud2 + ra2;
-  if (Cloud3 > ra) {
-   Cloud3 = 0; 
+  Cloud2 = Cloud2 - ra2;
+  if (Cloud3 < 0) {
+   Cloud3 = 1300; 
   }
   
   ellipse(Cloud2-30, 370, 300, 100);
-  Cloud2 = Cloud2 + ra2;
-  if (Cloud2 > ra) {
-   Cloud2 = 0; 
+  Cloud2 = Cloud2 - ra2;
+  if (Cloud2 < 0) {
+   Cloud2 = 1300; 
   }
   ellipse(Cloud3, 560, 330, 120);
   Cloud3 = Cloud3 + ra3;
@@ -96,22 +96,26 @@ void draw() {
   if (Cloud3 > ra) {
    Cloud3 = 0; 
   }
+  fill(0);
+  textSize(24);
+  text("Bird Colour", 840, 30);
+  
   //date
   flock.run();
   fill(0);
   textSize(32);
-text(getPeople(), 10, 30);
+text("People:" + getPeople(), 10, 30);
   
 int d = day();    // Values from 1 - 31
 int m = month();  // Values from 1 - 12
 int y = year();   // 2003, 2004, 2005, etc.
 
 String s = String.valueOf(d);
-text(s, 200, 28);
+text("Date: " + s + "-", 250, 30);
 s = String.valueOf(m);
-text(s, 200, 56); 
+text(s + "-", 400, 30); 
 s = String.valueOf(y);
-text(s, 200, 84);
+text(s, 440, 30);
 
 //buttons
 update(mouseX, mouseY);
