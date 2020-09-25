@@ -200,13 +200,6 @@ void update(int x, int y) {
     august = september = may = april = false;
   }
   
-  if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
-  overSpeaker = true;
-  }
-  else{
-  overSpeaker = false;
-  }
-  
   boringGraphHovered = overButton(rectX4, rectY, rectLength, rectHeight);
   graphBackHovered = false;
 }
@@ -250,13 +243,18 @@ void mousePressed() {
     playSFX();
   }
   
+  if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
+    overSpeaker = !overSpeaker;
+  }
+  
   if(overSpeaker) {
-    if (muted != true) {
-      muted = true;
-    }
-    else {
-      muted = false;
-    }
+    ac.stop();
+    line(35,13, 35,25);
+    line(40,8, 40,30);
+    line(45,3, 45,35);
+  }
+  else {
+    ac.start();
   }
   
   if (boringGraphHovered) {
