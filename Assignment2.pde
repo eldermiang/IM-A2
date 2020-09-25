@@ -19,6 +19,7 @@ color currentColor;
 color rectHighlight;
 
 PImage groundBG, fishBG;
+PImage groundKey, fishKey, airKey;
 
 AudioContext ac = new AudioContext();
 
@@ -58,6 +59,10 @@ void setup() {
   currentColor = color(0);
   groundBG = loadImage("Images/Dirt_Background.jpg");
   fishBG = loadImage("Images/Fish_Background.png");
+  
+  groundKey = loadImage("Images/Ground_Key.png");
+  fishKey = loadImage("Images/Ground_Key.png");
+  airKey = loadImage("Images/Ground_Key.png");
   
   playBGM();
 }
