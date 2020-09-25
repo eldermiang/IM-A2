@@ -180,12 +180,12 @@ void mousePressed() {
   
   if(overSpeaker) {
   ac.stop();
-  line(35,13, 35,25);
-  line(40,8, 40,30);
-  line(45,3, 45,35);
   }
   else {
   ac.start();
+  line(35,13, 35,25);
+  line(40,8, 40,30);
+  line(45,3, 45,35);
   }
 }
 
@@ -325,6 +325,7 @@ void drawSpeaker() {
   rect(15,18,13,15); //Speaker
   triangle(13,17,30,35,30,3);
 }
+
 void addBoids(){
   int people = 0;
   
