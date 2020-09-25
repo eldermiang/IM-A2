@@ -10,10 +10,12 @@ int month = 9;
 int rectX, rectY, rectLength, rectHeight;
 int rectX2, rectY2;
 int rectY3, rectX3;
+int speakerX, speakerY, speakerLength,speakerHeight;
 
 boolean overFloor0, overFloor1, overFloor2, overFloor3;
 boolean september, august;
 boolean switchTrack;
+boolean overSpeaker;
 
 color currentColor;
 color rectHighlight;
@@ -65,6 +67,12 @@ void setup() {
   airKey = loadImage("Images/Air_Key.png");
   
   playBGM();
+  
+  speakerX = 10;
+  speakerY = 10;
+  speakerLength = 50;
+  speakerHeight = 50;
+  
 }
 
 void draw() {
@@ -84,7 +92,6 @@ void draw() {
   //else if (floor == 3) {
   //  background;
   //}
-  
   
   flock.run();
   generateUIButtons();
@@ -140,6 +147,12 @@ void update(int x, int y) {
   else {
     august = september = false;
   }
+  if (overButton(speakerX, speakerY, speakerLength, speakerHeight)){
+  overSpeaker = true;
+  }
+  else{
+  overSpeaker = false;
+  }
 }
 
 void mousePressed() {
@@ -165,8 +178,19 @@ void mousePressed() {
     month = 9;
     frameCount = -1;
   }
+  if(overSpeaker) {
+  ac.stop();
+  line(35,13, 35,25);
+  line(40,8, 40,30);
+  line(45,3, 45,35);
+  }
 }
 
+void mouseReleased() {
+if(overSpeaker) {
+ac.start();
+}
+}
 boolean overButton (int x, int y, int width, int height) {
   if (mouseX >= (x - width/2) && mouseX <= (x + width/2) && mouseY >= (y - height / 2) && mouseY <= (y + height/2)) {
     return true;
@@ -283,6 +307,8 @@ void generateUIButtons() {
   }
   rect(rectX3, rectY, rectLength, rectHeight); //September
   
+  drawSpeaker();
+  
   
   fill(255);
   textAlign(CENTER, CENTER);
@@ -294,7 +320,12 @@ void generateUIButtons() {
   text("August", rectX2, rectY);
   text("September", rectX3, rectY);
 }
-
+void drawSpeaker() {
+  fill(0);
+  stroke(0);
+  rect(15,18,13,15); //Speaker
+  triangle(13,17,30,35,30,3);
+}
 void addBoids(){
   int people = 0;
   
