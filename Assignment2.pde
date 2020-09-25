@@ -71,8 +71,11 @@ void setup() {
   
   playBGM();
   
-  if (boringGraph == null || boringGraph.currentFloor != floor) {
+  if (boringGraph == null) {
     boringGraph = new BoringGraph(WIDTH, HEIGHT, floor);
+  }
+  else if (boringGraph.currentFloor != floor) {
+    boringGraph.setFloor(floor);
   }
 }
 

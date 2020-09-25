@@ -74,6 +74,11 @@ class BoringGraph {
     }
   }
   
+  void setFloor(int floor) {
+    this.currentFloor = floor;
+    updateCounts();
+  }
+  
   void draw() {
     background(0);
   
